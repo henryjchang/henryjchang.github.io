@@ -24,6 +24,8 @@ title:		           "Welcome to Henry's blog!"
 description:	       'A work in progress'
 author:              'Henry Chang'
 
+google_analytics: "G-6XTGH37TE3"
+
 # RSS 2.0 can be used instead of Atom by uncommenting following two lines
 #feed:
 #  path: rss-feed.xml
