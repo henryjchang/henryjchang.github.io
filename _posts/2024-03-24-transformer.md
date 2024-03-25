@@ -9,7 +9,9 @@ image: transformer/transformer.png
 
 One of the cornerstones of the seemingly weekly advancements in AI research and applications is the transformer architecture, introduced in [Attention Is All You Need](https://arxiv.org/abs/1706.03762) by Vaswani, et al in 2017. I felt the magic for myself last year when I tried out Andrej Karpathy's [nanoGPT](https://github.com/karpathy/nanoGPT) project and was able to train a character-level language model on my Mac within minutes, and saw reasonable-looking text being produced. I wanted to try my hand at writing a transformer from scratch. After some ramping-up in machine learning (see my previous posts), I've finally accomplished that. Check out [this notebook](henryjchang.github.io/_notebooks/transformer/transformer_from_scratch.ipynb) for a PyTorch implementation of a decoder-only transformer. To guide the development with a concrete problem to solve, I train on the same subset of the works of Shakespeare that Karpathy used for his character-level model, but use the Byte-Pair Encoding tokenizer used for GPT-2. I referenced [ARENA 3.0](https://github.com/callummcdougall/ARENA_3.0/tree/main) for some code and also found [Jacob Hilton's deep learning curriculum chapter on Transformers](https://github.com/jacobhilton/deep_learning_curriculum/blob/master/1-Transformers.md) helpful and walk through his first-principle questions below.
 
-[TODO: open in colab button]
+<a target="_blank" href="https://colab.research.google.com/github/henryjchang/henryjchang.github.io/blob/gh-pages/_notebooks/transformer/transformer_from_scratch.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 # Transformer Overview
 Transformer models have been massively popular in the last few years and have been the go-to architecture for working with sequence data like text. Large language models (LLMs) such as the GPT series from OpenAI are all based on the transformer architecture. The core innovation behind transformers is an attention mechanism that allows the model to flexibly focus on different parts of the input sequence when producing each output element.
