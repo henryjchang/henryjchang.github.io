@@ -205,14 +205,14 @@ On attention as a generalized convolution from ARENA 3.0:
 
 # Counting parameters in a transformer
 For a guide on calculating the number of parameters in a model, check out
-- https://kipp.ly/transformer-param-count/
-- https://kipp.ly/transformer-inference-arithmetic/
-- https://github.com/karpathy/nanoGPT/blob/master/transformer_sizing.ipynb
+- [Transformer param count](https://kipp.ly/transformer-param-count/)
+- [Transformer inference arithmetic](https://kipp.ly/transformer-inference-arithmetic/)
+- [Transformer sizing](https://github.com/karpathy/nanoGPT/blob/master/transformer_sizing.ipynb)
 
 # Memory usage in a transformer
 Here's some resources on how to reduce memory usage during inference by caching the K and V matrices. In short, during training, the full input sequence is available, so self-attention can be computed in a single pass over the sequence. However, during inference, the output sequence is generated autoregressively, and a single token is added to the input each time. It's then helpful to cache the K and V matrices and add on a single row for the new token each time.
 - [The KV Cache: Memory Usage in Transformers](https://www.youtube.com/watch?v=80bIUggRJf4)
-- https://r4j4n.github.io/blogs/posts/kv/
+- [Transformers Optimization: Part 1 - KV Cache](https://r4j4n.github.io/blogs/posts/kv/)
 
 # Further reading
 - [Transformer Circuits Thread](https://transformer-circuits.pub/) - Anthropic's ideas on Transformer interpretability
@@ -242,5 +242,5 @@ Suggested exercises from [Andrej Karpathy: "Let's build GPT: from scratch, in co
 - Read some transformer papers and implement one additional feature or change that people seem to use. Does it improve the performance of your GPT?
 
 Other exercises:
-- https://transformer-circuits.pub/2021/exercises/index.html
+- [transformer-circuits exercises](https://transformer-circuits.pub/2021/exercises/index.html)
 
