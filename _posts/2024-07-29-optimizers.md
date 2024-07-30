@@ -184,7 +184,7 @@ $\frac{dL}{\partial p_i} = \frac{2}{n} ∑_{m=1}^{n}(f(p) - y)\frac{df}{dp_i}$
 $\frac{d^2L}{\partial p_i \partial p_j} = \frac{2}{n} ∑_{m=1}^{n}\frac{\partial f}{\partial p_i}\frac{\partial f}{\partial p_j} + (f(p) - y)\frac{\partial^2 f}{\partial p_i \partial p_j}$
 
 So taking the partial derivatives, we find our Hessian matrix is
-$\frac{2}{n}\sum_{i=1}^n\begin{bmatrix}x_i^2 & x_i\\x_i & 1\end{bmatrix}$
+$\frac{2}{n}\sum_{i=1}^n\begin{bmatrix}x_i^2 & x_i\\\x_i & 1\end{bmatrix}$
 
 
 Lets add the Hessian for our overall function to optimize.
