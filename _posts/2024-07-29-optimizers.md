@@ -133,65 +133,18 @@ print(weights)
 ```python
 optimizer = GradientDescentOptimizer(weights, lr=0.01)
 trainer = LinearModelTrainer(data, optimizer, num_epochs=50)
-```
-
-
-```python
 trainer.train()
 ```
 
 
-```python
-print("final weights: ", optimizer.get_weights()[-1])
-print("final grads: ", trainer.get_grad())
-```
 
     final weights:  [5.00396765 1.77940355]
     final grads:  [[ 2.42028619e-14 -1.01068650e+00]]
 
 
 
-```python
-plt.plot(trainer.get_losses())
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-```
-
 
 <img src="/assets/img/optimizers/Optimizers_19_0.png">
-
-
-
-```python
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (gradient descent)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
 
 
     
@@ -266,7 +219,7 @@ class NewtonOptimizer:
     return self.iterated_weights
 ```
 
-We now need to compute the hessian as part of the backpropagation step of our trainer:
+We now need to compute the Hessian as part of the backpropagation step of our trainer:
 
 
 ```python
@@ -313,14 +266,6 @@ class LinearModelTrainerWithHessian:
 ```
 
 
-```python
-# random initialization
-weights = initial_weights.copy()
-print(weights)
-```
-
-    [0.58937388 0.91473434]
-
 
 With Newton's Method, since we can leverage the curvature information we are much less likely to overshoot - we can increase the learning rate.
 
@@ -328,67 +273,13 @@ With Newton's Method, since we can leverage the curvature information we are muc
 ```python
 optimizer = NewtonOptimizer(weights, lr=0.1)
 trainer = LinearModelTrainerWithHessian(data, optimizer, num_epochs=50)
-```
-
-
-```python
 trainer.train()
 ```
-
-
-```python
-print("final weights: ", optimizer.get_weights()[-1])
-print("final grads: ", trainer.get_grad())
-```
-
-    final weights:  [4.98121583 2.26763128]
-    final grads:  [[-1.71936717 -0.01557477]]
-
-
-
-```python
-plt.plot(trainer.get_losses())
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-```
-
 
     
 <img src="/assets/img/optimizers/Optimizers_38_0.png">
     
 
-
-
-```python
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (Newton)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
 
 
     
@@ -398,45 +289,6 @@ plt.show()
 
 Notice at each iteration the weights move much more directly toward the minimum. In fact, for this example, the 2nd order Taylor expansion is exactly equivalent to the original loss function. So we don't need to recompute a new 2nd order approximation around the current point at each iteration; instead, we can can get away with increasing the learning rate to 1.0 and get to the minimum in one iteration:
 
-
-```python
-weights = initial_weights.copy()
-optimizer = NewtonOptimizer(weights, lr=1.0)
-trainer = LinearModelTrainerWithHessian(data, optimizer, num_epochs=1)
-trainer.train()
-
-print("final weights: ", optimizer.get_weights()[-1])
-
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (gradient descent)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
-
-    final weights:  [5.00396765 2.27463993]
 
 
 
@@ -494,59 +346,11 @@ trainer.train()
 ```
 
 
-```python
-print("final weights: ", optimizer.get_weights()[-1])
-print("final grads: ", trainer.get_grad())
-```
-
-    final weights:  [5.00396776 2.1060116 ]
-    final grads:  [[ 1.22309545e-05 -3.51978437e-01]]
-
-
-
-```python
-plt.plot(trainer.get_losses())
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-```
-
 
     
 <img src="/assets/img/optimizers/Optimizers_48_0.png">
     
 
-
-
-```python
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (momentum)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
 
 
     
@@ -598,59 +402,9 @@ trainer.train()
 ```
 
 
-```python
-print("final weights: ", optimizer.get_weights()[-1])
-print("final grads: ", trainer.get_grad())
-```
-
-    final weights:  [4.59860447 2.27463982]
-    final grads:  [[-2.87094542e+01 -3.08533918e-07]]
-
-
-
-```python
-plt.plot(trainer.get_losses())
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-```
-
-
     
 <img src="/assets/img/optimizers/Optimizers_56_0.png">
     
-
-
-
-```python
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (AdaGrad)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
 
 
     
@@ -701,59 +455,9 @@ trainer.train()
 ```
 
 
-```python
-print("final weights: ", optimizer.get_weights()[-1])
-print("final grads: ", trainer.get_grad())
-```
 
-    final weights:  [5.00268283 2.27463993]
-    final grads:  [[-1.04462827e-01  6.10622664e-16]]
-
-
-
-```python
-plt.plot(trainer.get_losses())
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-```
-
-
-    
 <img src="/assets/img/optimizers/Optimizers_64_0.png">
     
-
-
-
-```python
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (RMSProp)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
 
 
     
@@ -809,62 +513,10 @@ trainer = LinearModelTrainer(data, optimizer, num_epochs=50)
 trainer.train()
 ```
 
-
-```python
-print("final weights: ", optimizer.get_weights()[-1])
-print("final grads: ", trainer.get_grad())
-```
-
-    final weights:  [5.32749386 2.36656698]
-    final grads:  [[23.63626372  0.19332335]]
-
-
-
-```python
-plt.plot(trainer.get_losses())
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-```
-
-
     
 <img src="/assets/img/optimizers/Optimizers_72_0.png">
 
     
-
-
-
-```python
-W1 = np.linspace(0, 7, 100)
-W2 = np.linspace(-1, 4, 100)
-log_loss = np.empty(shape=(100,100))
-
-for i, w2 in enumerate(W2):
-  for j, w1 in enumerate(W1):
-    log_loss[i][j] = np.log(np.mean((w1*x + w2 - y)**2))
-
-
-weights1, weights2 = np.meshgrid(W1, W2)
-plt.pcolor(weights1, weights2, log_loss)
-plt.colorbar()
-
-# plot how gradient descent traversed the space
-traversal = list(zip(*(optimizer.get_weights())))
-plt.plot(traversal[0], traversal[1], marker='.', label='Weights (Adam)')
-
-# plot optimal weights
-min_loss_idx = np.argmin(log_loss)
-i,j = min_loss_idx//100, min_loss_idx%100
-plt.plot(W1[j], W2[i], 'r', marker='.', label='Optimal weights')
-
-plt.xlabel('weight1 (slope)')
-plt.ylabel('weight2 (bias)')
-plt.title('Loss Landscape')
-plt.legend()
-plt.show()
-```
-
 
     
 <img src="/assets/img/optimizers/Optimizers_73_0.png">
